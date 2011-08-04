@@ -1,0 +1,19 @@
+h1. Solution to Spotify Tech Puzzles in Python
+
+A few programming puzzles from: "http://www.spotify.com/int/jobs/tech/":http://www.spotify.com/int/jobs/tech/
+
+h2. Best Before
+
+* Problem ID: bestbefore
+* Difficulty: "Reggae"
+
+h2. Ticket Lottery
+
+* Problem ID: lottery
+* Difficulty: "Funk"
+
+h2. Bilateral Projects
+
+* Problem ID: bilateral
+* Difficulty: "Heavy metal"
+
