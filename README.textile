@@ -4,16 +4,16 @@ A few programming puzzles from: "http://www.spotify.com/int/jobs/tech/":http://w
 
 h2. Best Before
 
-* Problem ID: bestbefore
+* Problem ID: @bestbefore@
 * Difficulty: "Reggae"
 
 h2. Ticket Lottery
 
-* Problem ID: lottery
+* Problem ID: @lottery@
 * Difficulty: "Funk"
 
 h2. Bilateral Projects
 
-* Problem ID: bilateral
+* Problem ID: @bilateral@
 * Difficulty: "Heavy metal"
 
