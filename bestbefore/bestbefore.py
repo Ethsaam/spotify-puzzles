@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
+# Best Before: http://www.spotify.com/se/jobs/tech/best-before/
+# Peter Boström <pbos@kth.se> (2011-08-03)
+
 import datetime
 import itertools
 import sys
 
+# Read input
 line = input()
-
 nums = line.split('/')
 
-#validate input
+# Validate input
 error = False
 if len(nums) is not 3:
 	error = True
@@ -21,6 +24,9 @@ if error:
 	sys.exit(1)
 assert len(nums) == 3
 
+# Try all permutations for the date, simple
+# solution. Let datetime.date check if it's
+# valid, simply.
 earliest = None
 for perm in itertools.permutations(nums):
 	year = perm[0]
@@ -36,6 +42,7 @@ for perm in itertools.permutations(nums):
 	except ValueError:
 		pass
 
+# Print results
 if earliest is None:
 	print(line, 'is illegal')
 	sys.exit(1)

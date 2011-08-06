@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Ticket Lottery: http://www.spotify.com/se/jobs/tech/ticket-lottery/
+# Peter Boström <pbos@kth.se> (2011-08-04)
 import math
 
 # Binomial coefficient (n choose k)
@@ -31,7 +33,7 @@ theirs = m - p
 # How many lots are drawn.
 draws = n
 
-# Counting
+# Counting losses
 loss = 0
 
 # We 'lose' whenever less than needed_wins tickets
@@ -44,4 +46,5 @@ for i in range(needed_wins):
 total = choose(m, n)
 
 prob = 1 - loss / total
+
 print(prob)

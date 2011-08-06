@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Bilateral Projects: http://www.spotify.com/se/jobs/tech/bilateral-projects/
-# Peter Boström <pbos@kth.se> (2011-08-05)
+# Peter Boström <pbos@kth.se> (2011-08-06)
 
 # A Person is essentially an identifier and a list of teams
 # they belong to, or might be needed in.
