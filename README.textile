@@ -1,4 +1,4 @@
-h1. Solution to Spotify Tech Puzzles in Python
+h1. Solutions to Spotify Tech Puzzles in Python
 
 A few programming puzzles from: "http://www.spotify.com/int/jobs/tech/":http://www.spotify.com/int/jobs/tech/
 
