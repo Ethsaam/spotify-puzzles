@@ -29,9 +29,9 @@ assert len(nums) == 3
 # valid, simply.
 earliest = None
 for perm in itertools.permutations(nums):
-	year = perm[0]
-	if len(year) < 4:
-		year = 2000 + int(year)
+	year = int(perm[0])
+	if year < 1000:
+		year += 2000
 
 	month = int(perm[1])
 	day = int(perm[2])
