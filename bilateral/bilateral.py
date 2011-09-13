@@ -22,7 +22,8 @@ class Person:
 		if other.number == 1009:
 			return True
 
-		return self.number < other.number
+		# assures london people gets removed before our swedish dude
+		return self.number > other.number
 
 # Parse input
 num_teams = int(input())
@@ -31,7 +32,7 @@ people = {}
 
 # Read team pairs
 for i in range(num_teams):
-	(sth, ldn) = [int(i) for i in input().split()]
+	(sth, ldn) = [int(j) for j in input().split()]
 
 	teams.append([sth,ldn])
 
