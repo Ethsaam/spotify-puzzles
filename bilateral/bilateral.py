@@ -1,96 +1,94 @@
 #!/usr/bin/env python3
 # Bilateral Projects: http://www.spotify.com/se/jobs/tech/bilateral-projects/
-# Peter Boström <pbos@kth.se> (2011-08-06)
+# Peter Boström <pbos@kth.se> (2012-01-10)
+from collections import deque
 
-# A Person is essentially an identifier and a list of teams
-# they belong to, or might be needed in.
-class Person:
-	def __init__(self, number, team):
-		self.number = number
-		self.teams = [team]
-
-	def __lt__(self, other):
-		if len(self.teams) != len(other.teams):
-			return len(self.teams) < len(other.teams)
-
-		# Hunch says that this might be enough to help our friend out.
-		# I've tried to provide counterexamples to this, but failed.
-		# Probably because of restrictions put on the problem, that all
-		# teams have exactly two members, etc.
-		if self.number == 1009:
-			return False
-		if other.number == 1009:
-			return True
-
-		# assures london people gets removed before our swedish dude
-		return self.number > other.number
+class Node:
+	def __init__(self, value):
+		self.value = value
+		self.neigh = []
 
 # Parse input
 num_teams = int(input())
-teams = []
 people = {}
+stockholm = []
+london = []
 
 # Read team pairs
 for i in range(num_teams):
 	(sth, ldn) = [int(j) for j in input().split()]
 
-	teams.append([sth,ldn])
-
-	def addperson(person, team):
+	for person in [sth,ldn]:
 		if person not in people:
-			people[person] = Person(person, team)
-		else:
-			people[person].teams.append(team)
+			node = Node(person)
+			people[person] = node
+			if person == sth:
+				stockholm.append(node)
+			else:
+				london.append(node)
 
-	addperson(sth, i)
-	addperson(ldn, i)
+	people[sth].neigh.append(people[ldn])
+	people[ldn].neigh.append(people[sth])
 
-# Start crunching
-chosen = []
-while len(people) != 0:
-	# Removing a person will choose all people they're connected to, as
-	# at least one person from each team needs to attend. It triggers a
-	# chain reaction to remove all people who become redundant.
-	def removeperson(p):
-		del people[p.number]
-		choose_ppl = []
-		for team in p.teams:
-			teams[team].remove(p.number)
-			choose_ppl.append(teams[team][0])
-		for c in choose_ppl:
-			chooseperson(c)
+for town in (stockholm, london):
+	for person in town:
+		print(str(person.value) + ': ')
+		for p in person.neigh:
+			print('  ' + str(p.value))
 
-	# Choosing a person will render some people unnecessary, which will in
-	# turn remove them (continuing the chain reaction).
-	def chooseperson(num):
-		p = people[num]
-		del people[num]
-		# Register person as chosen
-		chosen.append(num)
-		remove_ppl = []
-		# Remove person from all teams.
-		for team in p.teams:
-			teams[team].remove(num)
-			# Remove co-worker from team as well, if they've not already
-			# been removed from the team.
-			if teams[team] != []:
-				other = people[teams[team][0]]
-				other.teams.remove(team)
-				if other.teams == []:
-					remove_ppl.append(other)
-		# Finally, remove all people who are no longer required for any
-		# teams.
-		for p in remove_ppl:
-			removeperson(p)
+# straight(ish) out of wikipedia
+def hopcroft_karp():
+	def bfs():
+		q = deque()
+		for v in stockholm:
+			if pair[v] is None:
+				dist[v] = 0
+				q.append(v)
+			else:
+				dist[v] = None
 
-	# Remove person with least edges. This will only be our friend when
-	# he's the last person with the fewest edges.
-	rem = min(people.values())
+		dist[None] = None
+		while q:
+			v = q.popleft()
+			if v is None:
+				continue
+			for u in v.neigh:
+				if dist[pair[u]] == None:
+					dist[pair[u]] = dist[v] + 1
+					q.append(pair[u])
 
-	removeperson(rem)
+		return dist[None] != None
 
-# Print solution
-print(len(chosen))
+	def dfs(v):
+		if v == None:
+			return True
+		for u in v.neigh:
+			if dist[pair[u]] == dist[v] + 1:
+				if dfs(pair[u]):
+					pair[u] = v
+					pair[v] = u
+					return True
+		dist[v] = None
+		return False
+	pair = {None: None}
+	for (number, v) in people.items():
+		pair[v] = None
+	dist = {}
+	matching = 0
+	while bfs():
+		for v in stockholm:
+			if pair[v] == None:
+				if dfs(v):
+					matching += 1
 
-for c in chosen:
-	print(c)
+	out = {}
+	for k, v in pair.items():
+		if k is None or v is None or k.value > v.value:
+			continue
+		out[k] = v
+	return out
+
+min_match = hopcroft_karp()
+for k, v in min_match.items():
+	print(str(k.value) + ': ' + str(v.value))
+
