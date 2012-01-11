@@ -2,6 +2,7 @@
 # Bilateral Projects: http://www.spotify.com/se/jobs/tech/bilateral-projects/
 # Peter Boström <pbos@kth.se> (2012-01-10)
 from collections import deque
+from copy import copy
 
 class Node:
 	def __init__(self, value):
@@ -88,7 +89,17 @@ def hopcroft_karp():
 		out[k] = v
 	return out
 
+def flow_to_cover(match):
+	vertices = copy(people)
+	for (k, v) in match.items():
+		del vertices[k.value]
+		del vertices[v.value]
+	return [str(a.value) + ': ' + str(b.value) for (a,b) in match.items()]
+
 min_match = hopcroft_karp()
 for k, v in min_match.items():
 	print(str(k.value) + ': ' + str(v.value))
 
+min_out = flow_to_cover(min_match)
+
+print(min_out)
