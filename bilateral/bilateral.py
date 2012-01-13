@@ -31,12 +31,6 @@ for i in range(num_teams):
 	people[sth].neigh.append(people[ldn])
 	people[ldn].neigh.append(people[sth])
 
-#for town in (stockholm, london):
-#	for person in town:
-#		print(str(person.value) + ': ')
-#		for p in person.neigh:
-#			print('  ' + str(p.value))
-
 # straight(ish) out of wikipedia
 def hopcroft_karp():
 	def bfs():
@@ -118,7 +112,7 @@ def flow_to_cover(match):
 
 	cover = list(cover.keys())
 	for (k,v) in match.items():
-		# if matched edge hasn't been used, prefer stockholm
+		# if matched edge hasn't been used yet, prefer stockholm
 		if k.value < v.value:
 			cover.append(k.value)
 	return cover
@@ -142,4 +136,7 @@ if 1009 not in min_out and 1009 in people:
 	if len(friend_out) == len(min_out):
 		min_out = friend_out
 
-print(min_out)
+print(len(min_out))
+for i in min_out:
+		print(i)
+
