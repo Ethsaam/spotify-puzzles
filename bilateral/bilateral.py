@@ -31,11 +31,11 @@ for i in range(num_teams):
 	people[sth].neigh.append(people[ldn])
 	people[ldn].neigh.append(people[sth])
 
-for town in (stockholm, london):
-	for person in town:
-		print(str(person.value) + ': ')
-		for p in person.neigh:
-			print('  ' + str(p.value))
+#for town in (stockholm, london):
+#	for person in town:
+#		print(str(person.value) + ': ')
+#		for p in person.neigh:
+#			print('  ' + str(p.value))
 
 # straight(ish) out of wikipedia
 def hopcroft_karp():
@@ -71,6 +71,7 @@ def hopcroft_karp():
 					return True
 		dist[v] = None
 		return False
+
 	pair = {None: None}
 	for (number, v) in people.items():
 		pair[v] = None
@@ -84,7 +85,7 @@ def hopcroft_karp():
 
 	out = {}
 	for k, v in pair.items():
-		if k is None or v is None or k.value > v.value:
+		if k is None or v is None:
 			continue
 		out[k] = v
 	return out
@@ -93,13 +94,52 @@ def flow_to_cover(match):
 	vertices = copy(people)
 	for (k, v) in match.items():
 		del vertices[k.value]
-		del vertices[v.value]
-	return [str(a.value) + ': ' + str(b.value) for (a,b) in match.items()]
+	visited = {}
+	q = deque()
+	for (num, val) in vertices.items():
+		visited[val] = True
+		q.append((val, 0))
+
+	cover = {}
+
+	while q:
+		(node, dist) = q.popleft()
+		dist += 1
+		for neigh in node.neigh:
+			if neigh in visited:
+				continue
+			visited[neigh] = True
+			q.append((neigh, dist))
+			if dist & 1:
+				cover[neigh.value] = True
+				pair = match[neigh]
+				del match[neigh]
+				del match[pair]
+
+	cover = list(cover.keys())
+	for (k,v) in match.items():
+		# if matched edge hasn't been used, prefer stockholm
+		if k.value < v.value:
+			cover.append(k.value)
+	return cover
 
 min_match = hopcroft_karp()
-for k, v in min_match.items():
-	print(str(k.value) + ': ' + str(v.value))
-
 min_out = flow_to_cover(min_match)
+
+if 1009 not in min_out and 1009 in people:
+	# attempt another vertex cover, which includes our
+	# friend, if it's still minimum, use it
+	friend = people[1009]
+	for n in friend.neigh:
+		n.neigh.remove(friend)
+
+	friend.neigh = []
+
+	friend_match = hopcroft_karp()
+	friend_out = flow_to_cover(friend_match)
+	friend_out.append(1009)
+
+	if len(friend_out) == len(min_out):
+		min_out = friend_out
 
 print(min_out)
